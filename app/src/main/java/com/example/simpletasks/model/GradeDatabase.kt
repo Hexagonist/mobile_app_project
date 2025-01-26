@@ -1,4 +1,4 @@
-package com.example.simpletasks
+package com.example.simpletasks.model
 
 import android.content.Context
 import androidx.room.Database

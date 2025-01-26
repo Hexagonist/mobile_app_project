@@ -1,4 +1,4 @@
-package com.example.simpletasks.ui
+package com.example.simpletasks.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.OutlinedTextField
@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.TopAppBar
 import androidx.navigation.NavController
-import com.example.simpletasks.Grade
-import com.example.simpletasks.GradeViewModel
+import com.example.simpletasks.model.Grade
+import com.example.simpletasks.viewmodel.TasksViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddGradeScreen(navController: NavController, gradeViewModel: GradeViewModel) {
+fun AddGradeScreen(navController: NavController, tasksViewModel: TasksViewModel) {
     var subject by remember { mutableStateOf("") }
     var grade by remember { mutableStateOf("") }
 
@@ -63,7 +63,7 @@ fun AddGradeScreen(navController: NavController, gradeViewModel: GradeViewModel)
                 label = { Text("Ocena") }
             )
             Button(onClick = {
-                gradeViewModel.insert(Grade(subject = subject, grade = grade))
+                tasksViewModel.insert(Grade(subject = subject, grade = grade))
                 navController.popBackStack()
             }) {
                 Text(

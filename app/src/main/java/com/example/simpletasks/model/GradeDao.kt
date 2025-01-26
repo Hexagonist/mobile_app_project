@@ -1,8 +1,8 @@
-package com.example.simpletasks
+package com.example.simpletasks.model
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.simpletasks.Grade
+import com.example.simpletasks.model.Grade
 
 @Dao
 interface GradeDao {

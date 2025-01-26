@@ -1,4 +1,4 @@
-package com.example.simpletasks.ui
+package com.example.simpletasks.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,14 +19,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.simpletasks.Grade
-import com.example.simpletasks.GradeViewModel
+import com.example.simpletasks.model.Grade
+import com.example.simpletasks.viewmodel.TasksViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GradesScreen(navController: NavController, gradeViewModel: GradeViewModel) {
-    val grades by gradeViewModel.allGrades.observeAsState(listOf())
+fun MainScreen(navController: NavController, tasksViewModel: TasksViewModel) {
+    val grades by tasksViewModel.allGrades.observeAsState(listOf())
 
     // Calculate the mean dynamically
     val meanGrade = grades

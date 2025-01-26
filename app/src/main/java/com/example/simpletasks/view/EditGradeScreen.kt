@@ -1,4 +1,4 @@
-package com.example.simpletasks.ui
+package com.example.simpletasks.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,12 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.simpletasks.GradeViewModel
+import com.example.simpletasks.viewmodel.TasksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditGradeScreen(navController: NavController, gradeViewModel: GradeViewModel, gradeId: Int) {
-    val grade = gradeViewModel.allGrades.observeAsState(listOf()).value.firstOrNull { it.id == gradeId }
+fun EditGradeScreen(navController: NavController, tasksViewModel: TasksViewModel, gradeId: Int) {
+    val grade = tasksViewModel.allGrades.observeAsState(listOf()).value.firstOrNull { it.id == gradeId }
 
     var subject by remember { mutableStateOf(grade?.subject ?: "") }
     var gradeValue by remember { mutableStateOf(grade?.grade ?: "") }
@@ -79,7 +79,7 @@ fun EditGradeScreen(navController: NavController, gradeViewModel: GradeViewModel
             Row {
                 Button(onClick = {
                     grade?.let {
-                        gradeViewModel.update(it.copy(subject = subject, grade = gradeValue))
+                        tasksViewModel.update(it.copy(subject = subject, grade = gradeValue))
                     }
                     navController.popBackStack()
                 }) {
@@ -90,7 +90,7 @@ fun EditGradeScreen(navController: NavController, gradeViewModel: GradeViewModel
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(onClick = {
-                    grade?.let { gradeViewModel.delete(it) }
+                    grade?.let { tasksViewModel.delete(it) }
                     navController.popBackStack()
                 }) {
                     Text(

@@ -1,9 +1,11 @@
-package com.example.simpletasks
+package com.example.simpletasks.viewmodel
 
 import androidx.lifecycle.*
+import com.example.simpletasks.model.Grade
+import com.example.simpletasks.model.GradeRepository
 import kotlinx.coroutines.launch
 
-class GradeViewModel(private val repository: GradeRepository) : ViewModel() {
+class TasksViewModel(private val repository: GradeRepository) : ViewModel() {
     val allGrades: LiveData<List<Grade>> = repository.allGrades
 
     fun insert(grade: Grade) = viewModelScope.launch {
@@ -21,9 +23,9 @@ class GradeViewModel(private val repository: GradeRepository) : ViewModel() {
 
 class GradeViewModelFactory(private val repository: GradeRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(GradeViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return GradeViewModel(repository) as T
+            return TasksViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

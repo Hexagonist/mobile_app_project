@@ -1,8 +1,8 @@
-package com.example.simpletasks
+package com.example.simpletasks.model
 
 import androidx.lifecycle.LiveData
-import com.example.simpletasks.Grade
-import com.example.simpletasks.GradeDao
+import com.example.simpletasks.model.Grade
+import com.example.simpletasks.model.GradeDao
 
 class GradeRepository(private val gradeDao: GradeDao) {
     val allGrades: LiveData<List<Grade>> = gradeDao.getAllGrades()
