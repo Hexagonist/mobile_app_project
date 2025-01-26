@@ -6,14 +6,17 @@ import androidx.room.*
 @Dao
 interface TaskDao {
     @Query("SELECT * FROM grades")
-    fun getAllGrades(): LiveData<List<Task>>
+    fun getAllTasks(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM grades WHERE categoryId = :categoryId")
+    fun getTasksByCategory(categoryId: Int): LiveData<List<Task>>
 
     @Insert
-    suspend fun insertGrade(task: Task)
+    suspend fun insertTask(task: Task)
 
     @Update
-    suspend fun updateGrade(task: Task)
+    suspend fun updateTask(task: Task)
 
     @Delete
-    suspend fun deleteGrade(task: Task)
+    suspend fun deleteTask(task: Task)
 }

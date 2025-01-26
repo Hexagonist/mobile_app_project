@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Task::class], version = 1)
+@Database(entities = [Task::class, Category::class], version = 2)
 abstract class TaskDatabase : RoomDatabase() {
-    abstract fun gradeDao(): TaskDao
+    abstract fun taskDao(): TaskDao
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         @Volatile
@@ -18,8 +19,10 @@ abstract class TaskDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     TaskDatabase::class.java,
-                    "grade_database"
-                ).build()
+                    "task_database"
+                )
+                    .fallbackToDestructiveMigration() // Handle schema updates
+                    .build()
                 INSTANCE = instance
                 instance
             }
