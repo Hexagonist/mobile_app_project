@@ -10,8 +10,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.simpletasks.view.AddTaskScreen
 import com.example.simpletasks.view.EditTaskScreen
 import com.example.simpletasks.view.MainScreen
-import com.example.simpletasks.model.GradeDatabase
-import com.example.simpletasks.model.GradeRepository
+import com.example.simpletasks.model.TaskDatabase
+import com.example.simpletasks.model.TaskRepository
 import com.example.simpletasks.viewmodel.TasksViewModel
 import com.example.simpletasks.viewmodel.GradeViewModelFactory
 
@@ -19,8 +19,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val database by lazy { GradeDatabase.getDatabase(this) }
-        val repository by lazy { GradeRepository(database.gradeDao()) }
+        val database by lazy { TaskDatabase.getDatabase(this) }
+        val repository by lazy { TaskRepository(database.gradeDao()) }
 
         setContent {
             val navController = rememberNavController()

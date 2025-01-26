@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.simpletasks.model.Grade
+import com.example.simpletasks.model.Task
 import com.example.simpletasks.viewmodel.TasksViewModel
 
 
@@ -77,7 +77,7 @@ fun MainScreen(navController: NavController, tasksViewModel: TasksViewModel) {
 }
 
 @Composable
-fun GradeRow(grade: Grade, onEdit: () -> Unit) {
+fun GradeRow(task: Task, onEdit: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,13 +88,13 @@ fun GradeRow(grade: Grade, onEdit: () -> Unit) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = grade.subject,
+                    text = task.subject,
                     fontSize = 20.sp
                 )
             }
             Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = grade.grade,
+                    text = task.grade,
                     fontSize = 20.sp
                 )
             }

@@ -1,27 +1,27 @@
 package com.example.simpletasks.viewmodel
 
 import androidx.lifecycle.*
-import com.example.simpletasks.model.Grade
-import com.example.simpletasks.model.GradeRepository
+import com.example.simpletasks.model.Task
+import com.example.simpletasks.model.TaskRepository
 import kotlinx.coroutines.launch
 
-class TasksViewModel(private val repository: GradeRepository) : ViewModel() {
-    val allGrades: LiveData<List<Grade>> = repository.allGrades
+class TasksViewModel(private val repository: TaskRepository) : ViewModel() {
+    val allGrades: LiveData<List<Task>> = repository.allGrades
 
-    fun insert(grade: Grade) = viewModelScope.launch {
-        repository.insert(grade)
+    fun insert(task: Task) = viewModelScope.launch {
+        repository.insert(task)
     }
 
-    fun update(grade: Grade) = viewModelScope.launch {
-        repository.update(grade)
+    fun update(task: Task) = viewModelScope.launch {
+        repository.update(task)
     }
 
-    fun delete(grade: Grade) = viewModelScope.launch {
-        repository.delete(grade)
+    fun delete(task: Task) = viewModelScope.launch {
+        repository.delete(task)
     }
 }
 
-class GradeViewModelFactory(private val repository: GradeRepository) : ViewModelProvider.Factory {
+class GradeViewModelFactory(private val repository: TaskRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TasksViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")

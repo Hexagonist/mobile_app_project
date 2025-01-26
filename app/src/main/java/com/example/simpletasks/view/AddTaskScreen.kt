@@ -9,7 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.TopAppBar
 import androidx.navigation.NavController
-import com.example.simpletasks.model.Grade
+import com.example.simpletasks.model.Task
 import com.example.simpletasks.viewmodel.TasksViewModel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -63,7 +63,7 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TasksViewModel) 
                 label = { Text("Ocena") }
             )
             Button(onClick = {
-                tasksViewModel.insert(Grade(subject = subject, grade = grade))
+                tasksViewModel.insert(Task(subject = subject, grade = grade))
                 navController.popBackStack()
             }) {
                 Text(
