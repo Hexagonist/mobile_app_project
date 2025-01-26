@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddGradeScreen(navController: NavController, tasksViewModel: TasksViewModel) {
+fun AddTaskScreen(navController: NavController, tasksViewModel: TasksViewModel) {
     var subject by remember { mutableStateOf("") }
     var grade by remember { mutableStateOf("") }
 

@@ -26,7 +26,7 @@ import com.example.simpletasks.viewmodel.TasksViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditGradeScreen(navController: NavController, tasksViewModel: TasksViewModel, gradeId: Int) {
+fun EditTaskScreen(navController: NavController, tasksViewModel: TasksViewModel, gradeId: Int) {
     val grade = tasksViewModel.allGrades.observeAsState(listOf()).value.firstOrNull { it.id == gradeId }
 
     var subject by remember { mutableStateOf(grade?.subject ?: "") }
