@@ -1,24 +1,25 @@
 package com.example.simpletasks.model
 
-import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import android.content.Context
 
-@Database(entities = [Grade::class], version = 1)
-abstract class GradeDatabase : RoomDatabase() {
-    abstract fun gradeDao(): GradeDao
+@Database(entities = [Task::class], version = 1, exportSchema = false)
+abstract class TaskDatabase : RoomDatabase() {
+
+    abstract fun taskDao(): TaskDao
 
     companion object {
         @Volatile
-        private var INSTANCE: GradeDatabase? = null
+        private var INSTANCE: TaskDatabase? = null
 
-        fun getDatabase(context: Context): GradeDatabase {
+        fun getDatabase(context: Context): TaskDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    GradeDatabase::class.java,
-                    "grade_database"
+                    TaskDatabase::class.java,
+                    "task_database"
                 ).build()
                 INSTANCE = instance
                 instance

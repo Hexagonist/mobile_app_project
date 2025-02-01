@@ -9,8 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.TopAppBar
 import androidx.navigation.NavController
-import com.example.simpletasks.model.Grade
-import com.example.simpletasks.viewmodel.TasksViewModel
+import com.example.simpletasks.model.Task
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,13 +19,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.simpletasks.viewmodel.TaskViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddGradeScreen(navController: NavController, tasksViewModel: TasksViewModel) {
-    var subject by remember { mutableStateOf("") }
-    var grade by remember { mutableStateOf("") }
+fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
+    var title by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -53,17 +53,26 @@ fun AddGradeScreen(navController: NavController, tasksViewModel: TasksViewModel)
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OutlinedTextField(
-                value = subject,
-                onValueChange = { subject = it },
+                value = title,
+                onValueChange = { title = it },
                 label = { Text("Nazwa Przedmiotu") }
             )
             OutlinedTextField(
-                value = grade,
-                onValueChange = { grade = it },
+                value = category,
+                onValueChange = { category = it },
                 label = { Text("Ocena") }
             )
             Button(onClick = {
-                tasksViewModel.insert(Grade(subject = subject, grade = grade))
+                tasksViewModel.insert(
+                    Task(
+                        title = title,
+                        color = 0,
+                        categoryName = category,
+                        description = "description",
+                        importance = 0,
+                        isDone = false
+
+                    ))
                 navController.popBackStack()
             }) {
                 Text(

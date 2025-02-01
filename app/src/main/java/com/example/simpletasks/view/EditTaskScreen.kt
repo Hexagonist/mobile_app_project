@@ -22,15 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.simpletasks.viewmodel.TasksViewModel
+import com.example.simpletasks.viewmodel.TaskViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditGradeScreen(navController: NavController, tasksViewModel: TasksViewModel, gradeId: Int) {
-    val grade = tasksViewModel.allGrades.observeAsState(listOf()).value.firstOrNull { it.id == gradeId }
+fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, taskId: Int) {
+    var task = tasksViewModel.allTasks.observeAsState(listOf()).value.firstOrNull { it.id.toInt() == taskId }
 
-    var subject by remember { mutableStateOf(grade?.subject ?: "") }
-    var gradeValue by remember { mutableStateOf(grade?.grade ?: "") }
+    var title by remember { mutableStateOf(task?.title ?: "") }
+    var category by remember { mutableStateOf(task?.categoryName ?: "") }
 
     Scaffold(
         topBar = {
@@ -57,18 +57,18 @@ fun EditGradeScreen(navController: NavController, tasksViewModel: TasksViewModel
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             OutlinedTextField(
-                value = subject,
-                onValueChange = { subject = it },
+                value = title,
+                onValueChange = { title = it },
                 label = {
                     Text(
-                        text = "Nazwa Przedmiotu",
+                        text = "Nazwa zadania",
                         fontSize = 16.sp
                     )
                 }
             )
             OutlinedTextField(
-                value = gradeValue,
-                onValueChange = { gradeValue = it },
+                value = category,
+                onValueChange = { category = it },
                 label = {
                     Text(
                         text = "Ocena",
@@ -78,8 +78,8 @@ fun EditGradeScreen(navController: NavController, tasksViewModel: TasksViewModel
             )
             Row {
                 Button(onClick = {
-                    grade?.let {
-                        tasksViewModel.update(it.copy(subject = subject, grade = gradeValue))
+                    task?.let {
+                        tasksViewModel.update(it.copy(title = title, categoryName = category))
                     }
                     navController.popBackStack()
                 }) {
@@ -90,7 +90,7 @@ fun EditGradeScreen(navController: NavController, tasksViewModel: TasksViewModel
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(onClick = {
-                    grade?.let { tasksViewModel.delete(it) }
+                    task?.let { tasksViewModel.delete(it) }
                     navController.popBackStack()
                 }) {
                     Text(
