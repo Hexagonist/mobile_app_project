@@ -7,10 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -59,7 +63,18 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                 }
             )
         },
-    ) { padding ->
+        floatingActionButton = {
+            // Floating Action Button (FAB)
+            FloatingActionButton(
+                onClick = { navController.navigate("add") }, // Navigate to the "add" screen
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add, // Use the default "add" icon
+                    contentDescription = "Add Task" // Accessibility description
+                )
+            }
+        }) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             // LazyColumn to display grades
             LazyColumn(modifier = Modifier.weight(1f)) {
@@ -75,18 +90,18 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                 }
             }
 
-            // Row at the bottom to display the mean
-//            MeanRow(meanGrade)
-            Button(modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-                onClick = { navController.navigate("add") })
-            {
-                Text(
-                    text = "NOWE",
-                    fontSize = 20.sp
-                )
-            }
+//            // Row at the bottom to display the mean
+////            MeanRow(meanGrade)
+//            Button(modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(8.dp),
+//                onClick = { navController.navigate("add") })
+//            {
+//                Text(
+//                    text = "NOWE",
+//                    fontSize = 20.sp
+//                )
+//            }
         }
     }
 }
