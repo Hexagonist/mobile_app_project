@@ -12,6 +12,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -23,6 +25,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,15 +42,89 @@ import com.example.simpletasks.model.Task
 import com.example.simpletasks.viewmodel.TaskViewModel
 
 
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
+//    val tasks by taskViewModel.allTasks.observeAsState(listOf())
+//
+////    // Calculate the mean dynamically
+////    val meanGrade = grades
+////        .mapNotNull { it.grade.toDoubleOrNull() }
+////        .average()
+//
+//    Scaffold(
+//        topBar = {
+//            TopAppBar(
+//                title = {
+//                    Row(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center // This centers the content horizontally
+//                    ) {
+//                        Text(
+//                            text = "SimpleTasks",
+//                            fontWeight = FontWeight.Bold
+//                        )
+//                    }
+//                }
+//            )
+//        },
+//        floatingActionButton = {
+//            // Floating Action Button (FAB)
+//            FloatingActionButton(
+//                onClick = { navController.navigate("add") }, // Navigate to the "add" screen
+//                modifier = Modifier.padding(16.dp)
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.Add, // Use the default "add" icon
+//                    contentDescription = "Add Task" // Accessibility description
+//                )
+//            }
+//        }) { padding ->
+//        Column(modifier = Modifier.padding(padding)) {
+//            // LazyColumn to display grades
+//            LazyColumn(modifier = Modifier.weight(1f)) {
+//                items(tasks) { task ->
+//                    TaskRow(task,
+//                        onEdit = {
+//                        navController.navigate("edit/${task.id}")
+//                    },
+//                    onToggleDone = { isDone ->
+//                        // Update the task in the database
+//                        taskViewModel.update(task.copy(isDone = isDone))
+//                    })
+//                }
+//            }
+//
+////            // Row at the bottom to display the mean
+//////            MeanRow(meanGrade)
+////            Button(modifier = Modifier
+////                .fillMaxWidth()
+////                .padding(8.dp),
+////                onClick = { navController.navigate("add") })
+////            {
+////                Text(
+////                    text = "NOWE",
+////                    fontSize = 20.sp
+////                )
+////            }
+//        }
+//    }
+//}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
     val tasks by taskViewModel.allTasks.observeAsState(listOf())
+    var showSortMenu by remember { mutableStateOf(false) } // State for showing the sort menu
+    var sortOption by remember { mutableStateOf("None") } // State for the selected sort option
 
-//    // Calculate the mean dynamically
-//    val meanGrade = grades
-//        .mapNotNull { it.grade.toDoubleOrNull() }
-//        .average()
+    // Sort tasks based on the selected option
+    val sortedTasks = when (sortOption) {
+        "Importance" -> tasks.sortedBy { it.importance }
+        "Category" -> tasks.sortedBy { it.categoryName }
+        "Completed" -> tasks.sortedBy { it.isDone }
+        else -> tasks.sortedBy { it.isDone } // Default: no sorting
+    }
 
     Scaffold(
         topBar = {
@@ -53,11 +132,48 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center // This centers the content horizontally
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = "SimpleTasks",
                             fontWeight = FontWeight.Bold
+                        )
+                    }
+                },
+                actions = {
+                    // Sort icon button to show the context menu
+                    IconButton(onClick = { showSortMenu = true }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_sort), // Replace with your sort icon
+                            contentDescription = "Sort Tasks"
+                        )
+                    }
+
+                    // Sort context menu
+                    DropdownMenu(
+                        expanded = showSortMenu,
+                        onDismissRequest = { showSortMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Sort by Importance") },
+                            onClick = {
+                                sortOption = "Importance"
+                                showSortMenu = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Sort by Category") },
+                            onClick = {
+                                sortOption = "Category"
+                                showSortMenu = false
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Sort by Completed") },
+                            onClick = {
+                                sortOption = "Completed"
+                                showSortMenu = false
+                            }
                         )
                     }
                 }
@@ -66,42 +182,31 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
         floatingActionButton = {
             // Floating Action Button (FAB)
             FloatingActionButton(
-                onClick = { navController.navigate("add") }, // Navigate to the "add" screen
+                onClick = { navController.navigate("add") },
                 modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Default.Add, // Use the default "add" icon
-                    contentDescription = "Add Task" // Accessibility description
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Task"
                 )
             }
-        }) { padding ->
+        }
+    ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-            // LazyColumn to display grades
+            // LazyColumn to display sorted tasks
             LazyColumn(modifier = Modifier.weight(1f)) {
-                items(tasks) { task ->
-                    TaskRow(task,
+                items(sortedTasks) { task ->
+                    TaskRow(
+                        task = task,
                         onEdit = {
-                        navController.navigate("edit/${task.id}")
-                    },
-                    onToggleDone = { isDone ->
-                        // Update the task in the database
-                        taskViewModel.update(task.copy(isDone = isDone))
-                    })
+                            navController.navigate("edit/${task.id}")
+                        },
+                        onToggleDone = { isDone ->
+                            taskViewModel.update(task.copy(isDone = isDone))
+                        }
+                    )
                 }
             }
-
-//            // Row at the bottom to display the mean
-////            MeanRow(meanGrade)
-//            Button(modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(8.dp),
-//                onClick = { navController.navigate("add") })
-//            {
-//                Text(
-//                    text = "NOWE",
-//                    fontSize = 20.sp
-//                )
-//            }
         }
     }
 }
