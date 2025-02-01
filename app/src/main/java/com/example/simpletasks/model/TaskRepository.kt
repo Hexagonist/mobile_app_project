@@ -1,32 +1,33 @@
 package com.example.simpletasks.model
 
+
 import androidx.lifecycle.LiveData
+import kotlinx.coroutines.flow.Flow
 
-class TaskRepository(private val taskDao: TaskDao, private val categoryDao: CategoryDao) {
+class TaskRepository(private val taskDao: TaskDao) {
+
+    // LiveData to observe all tasks
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks()
-    val allCategories: LiveData<List<Category>> = categoryDao.getAllCategories()
 
-    suspend fun insertTask(task: Task) {
-        taskDao.insertTask(task)
+    // Insert a task
+    suspend fun insert(task: Task) {
+        taskDao.insert(task)
     }
 
-    suspend fun updateTask(task: Task) {
-        taskDao.updateTask(task)
+    // Update a task
+    suspend fun update(task: Task) {
+        taskDao.update(task)
     }
 
-    suspend fun deleteTask(task: Task) {
-        taskDao.deleteTask(task)
+    // Delete a task
+    suspend fun delete(task: Task) {
+        taskDao.deleteTaskById(task.id)
     }
 
-    suspend fun insertCategory(category: Category) {
-        categoryDao.insertCategory(category)
+    // Delete all tasks
+    suspend fun deleteAllTasks() {
+        taskDao.deleteAllTasks()
     }
 
-    suspend fun updateCategory(category: Category) {
-        categoryDao.updateCategory(category)
-    }
 
-    suspend fun deleteCategory(category: Category) {
-        categoryDao.deleteCategory(category)
-    }
 }

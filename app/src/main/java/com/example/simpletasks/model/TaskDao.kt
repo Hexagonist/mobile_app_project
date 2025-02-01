@@ -1,22 +1,34 @@
 package com.example.simpletasks.model
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM grades")
-    fun getAllTasks(): LiveData<List<Task>>
-
-    @Query("SELECT * FROM grades WHERE categoryId = :categoryId")
-    fun getTasksByCategory(categoryId: Int): LiveData<List<Task>>
 
     @Insert
-    suspend fun insertTask(task: Task)
+    suspend fun insert(task: Task)
 
     @Update
-    suspend fun updateTask(task: Task)
+    suspend fun update(task: Task)
 
     @Delete
-    suspend fun deleteTask(task: Task)
+    suspend fun delete(task: Task)
+
+    @Query("SELECT * FROM task_table")
+    fun getAllTasks(): LiveData<List<Task>> // Use Flow to observe changes in the database
+
+    @Query("SELECT * FROM task_table WHERE id = :taskId")
+    suspend fun getTaskById(taskId: Long): Task?
+
+    @Query("DELETE FROM task_table WHERE id = :taskId")
+    suspend fun deleteTaskById(taskId: Long)
+
+    @Query("DELETE FROM task_table")
+    suspend fun deleteAllTasks()
 }

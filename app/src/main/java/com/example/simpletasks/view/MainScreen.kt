@@ -20,18 +20,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.simpletasks.model.Task
-import com.example.simpletasks.viewmodel.TasksViewModel
+import com.example.simpletasks.viewmodel.TaskViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController, tasksViewModel: TasksViewModel) {
-    val grades by tasksViewModel.allGrades.observeAsState(listOf())
+fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
+    val tasks by taskViewModel.allTasks.observeAsState(listOf())
 
-    // Calculate the mean dynamically
-    val meanGrade = grades
-        .mapNotNull { it.grade.toDoubleOrNull() }
-        .average()
+//    // Calculate the mean dynamically
+//    val meanGrade = grades
+//        .mapNotNull { it.grade.toDoubleOrNull() }
+//        .average()
 
     Scaffold(
         topBar = {
@@ -42,7 +42,7 @@ fun MainScreen(navController: NavController, tasksViewModel: TasksViewModel) {
                         horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center // This centers the content horizontally
                     ) {
                         Text(
-                            text = "Moje Oceny",
+                            text = "Zadania",
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -53,15 +53,15 @@ fun MainScreen(navController: NavController, tasksViewModel: TasksViewModel) {
         Column(modifier = Modifier.padding(padding)) {
             // LazyColumn to display grades
             LazyColumn(modifier = Modifier.weight(1f)) {
-                items(grades) { grade ->
-                    GradeRow(grade, onEdit = {
-                        navController.navigate("edit/${grade.id}")
+                items(tasks) { task ->
+                    TaskRow(task, onEdit = {
+                        navController.navigate("edit/${task.id}")
                     })
                 }
             }
 
             // Row at the bottom to display the mean
-            MeanRow(meanGrade)
+//            MeanRow(meanGrade)
             Button(modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
@@ -77,7 +77,7 @@ fun MainScreen(navController: NavController, tasksViewModel: TasksViewModel) {
 }
 
 @Composable
-fun GradeRow(task: Task, onEdit: () -> Unit) {
+fun TaskRow(task: Task, onEdit: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,13 +88,13 @@ fun GradeRow(task: Task, onEdit: () -> Unit) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = task.subject,
+                    text = task.title,
                     fontSize = 20.sp
                 )
             }
             Column(Modifier.padding(16.dp)) {
                 Text(
-                    text = task.grade,
+                    text = task.categoryName,
                     fontSize = 20.sp
                 )
             }

@@ -1,14 +1,14 @@
 package com.example.simpletasks.model
 
-import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import android.content.Context
 
-@Database(entities = [Task::class, Category::class], version = 2)
+@Database(entities = [Task::class], version = 1, exportSchema = false)
 abstract class TaskDatabase : RoomDatabase() {
+
     abstract fun taskDao(): TaskDao
-    abstract fun categoryDao(): CategoryDao
 
     companion object {
         @Volatile
@@ -20,9 +20,7 @@ abstract class TaskDatabase : RoomDatabase() {
                     context.applicationContext,
                     TaskDatabase::class.java,
                     "task_database"
-                )
-                    .fallbackToDestructiveMigration() // Handle schema updates
-                    .build()
+                ).build()
                 INSTANCE = instance
                 instance
             }
