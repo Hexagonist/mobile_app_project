@@ -81,5 +81,18 @@ fun TaskRow(task: Task, onEdit: () -> Unit, onToggleDone: (Boolean) -> Unit) {
                 modifier = Modifier.padding(16.dp)
             )
         }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Pozostało: " + task.color.toString() + " dni",
+                fontSize = 20.sp,
+                fontWeight = if (task.isDone) FontWeight.Normal else FontWeight.Bold,
+                textDecoration = if (task.isDone) TextDecoration.LineThrough else TextDecoration.None,
+                modifier =  Modifier.padding(16.dp)
+            )
+        }
     }
 }

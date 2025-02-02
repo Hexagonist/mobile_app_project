@@ -1,5 +1,6 @@
 package com.example.simpletasks.view
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,10 +31,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simpletasks.R
 import com.example.simpletasks.viewmodel.TaskViewModel
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
+import android.content.Context
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, taskId: Int) {
+fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, taskId: Int, context: Context) {
     var task = tasksViewModel.allTasks.observeAsState(listOf()).value.firstOrNull { it.id.toInt() == taskId }
 
     var title by remember { mutableStateOf(task?.title ?: "") }
@@ -41,8 +46,30 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
     var category by remember { mutableStateOf(task?.categoryName ?: "") }
     var description by remember { mutableStateOf(task?.description ?: "") }
     var importance by remember { mutableStateOf(0) }
+    var selectedDate by remember { mutableStateOf("") }
+    var daysUntilTask by remember { mutableStateOf(0) }
 //    var isDone by remember { mutableStateOf(task.isDone) }
 
+    fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(context, { _, pickedYear, pickedMonth, pickedDay ->
+            val selectedCalendar = Calendar.getInstance()
+            selectedCalendar.set(pickedYear, pickedMonth, pickedDay)
+
+            val today = Calendar.getInstance()
+            val difference = TimeUnit.DAYS.convert(
+                selectedCalendar.timeInMillis - today.timeInMillis,
+                TimeUnit.MILLISECONDS
+            ).toInt()
+
+            daysUntilTask = difference
+            selectedDate = "$pickedDay/${pickedMonth + 1}/$pickedYear"
+        }, year, month, day).show()
+    }
 
     Scaffold(
         topBar = {
@@ -83,6 +110,10 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                 onValueChange = { description = it },
                 label = { Text("Treść") }
             )
+            // Date Picker Button
+            Button(onClick = { showDatePicker() }) {
+                Text(text = if (selectedDate.isEmpty()) "Termin" else "Termin: $selectedDate")
+            }
             // Importance Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -139,7 +170,9 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         ))
                     }
                     navController.popBackStack()
-                }) {
+                },
+                    enabled = title.isNotBlank() && category.isNotBlank()
+                ) {
                     Text(
                         text = "Zapisz",
                         fontSize = 20.sp

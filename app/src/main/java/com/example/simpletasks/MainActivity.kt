@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("edit/{taskId}") { backStackEntry ->
                     val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull() ?: 0
-                    EditTaskScreen(navController, tasksViewModel, taskId)
+                    EditTaskScreen(navController, tasksViewModel, taskId, this@MainActivity)
                 }
                 composable("categories") {
                     CategoriesScreen(navController = navController, taskViewModel = tasksViewModel)

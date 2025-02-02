@@ -106,7 +106,7 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, c
 
             // Date Picker Button
             Button(onClick = { showDatePicker() }) {
-                Text(text = if (selectedDate.isEmpty()) "Termin" else "Data: $selectedDate")
+                Text(text = if (selectedDate.isEmpty()) "Termin" else "Termin: $selectedDate")
             }
 
             // Importance Selection
