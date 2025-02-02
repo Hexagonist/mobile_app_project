@@ -119,7 +119,6 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Button for Importance 0
                 IconButton(
                     onClick = { importance = 0 },
                     modifier = Modifier
@@ -127,11 +126,10 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.arrow_up), // Replace with your drawable resource
-                        contentDescription = "Low Importance"
+                        painter = painterResource(id = R.drawable.double_arrow_down),
+                        contentDescription = "Very Low Importance"
                     )
                 }
-                // Button for Importance 1
                 IconButton(
                     onClick = { importance = 1 },
                     modifier = Modifier
@@ -139,12 +137,10 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_orange), // Replace with your drawable resource
-                        contentDescription = "Medium Importance"
+                        painter = painterResource(id = R.drawable.arrow_down),
+                        contentDescription = "Low Importance"
                     )
                 }
-
-                // Button for Importance 2
                 IconButton(
                     onClick = { importance = 2 },
                     modifier = Modifier
@@ -152,8 +148,30 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_red), // Replace with your drawable resource
+                        painter = painterResource(id = R.drawable.outline_circle_24),
+                        contentDescription = "Medium Importance"
+                    )
+                }
+                IconButton(
+                    onClick = { importance = 3 },
+                    modifier = Modifier
+                        .background(if (importance == 2) Color.LightGray else Color.Transparent)
+                        .border(1.dp, Color.Gray)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrow_up),
                         contentDescription = "High Importance"
+                    )
+                }
+                IconButton(
+                    onClick = { importance = 4 },
+                    modifier = Modifier
+                        .background(if (importance == 2) Color.LightGray else Color.Transparent)
+                        .border(1.dp, Color.Gray)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.double_arrow_up_red),
+                        contentDescription = "Very High Importance"
                     )
                 }
             }

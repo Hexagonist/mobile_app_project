@@ -59,11 +59,11 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
 
     // Sort tasks based on the selected option
     val sortedTasks = when (sortOption) {
-        "Importance" -> tasks.sortedBy { it.importance }
+        "Importance" -> tasks.sortedByDescending { it.importance }
         "Category" -> tasks.sortedBy { it.categoryName }
         "Completed" -> tasks.sortedBy { it.isDone }
         "Days Left" -> tasks.sortedBy { it.color } // Sorting by days left (stored in color field)
-        else -> tasks
+        else -> tasks.sortedByDescending { it.importance }
     }
 
     Scaffold(

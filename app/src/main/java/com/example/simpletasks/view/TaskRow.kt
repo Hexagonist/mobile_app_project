@@ -39,10 +39,12 @@ fun TaskRow(task: Task, onEdit: () -> Unit, onToggleDone: (Boolean) -> Unit) {
                 Image(
                     painter = painterResource(
                         id = when (task.importance) {
-                            0 -> R.drawable.arrow_up // Low importance
-                            1 -> R.drawable.double_arrow_up_orange // Medium importance
-                            2 -> R.drawable.double_arrow_up_red // High importance
-                            else -> R.drawable.arrow_up // Default
+                            0 -> R.drawable.double_arrow_down // Very Low importance
+                            1 -> R.drawable.arrow_down // Low importance
+                            2 -> R.drawable.outline_circle_24 // Medium importance
+                            3 -> R.drawable.arrow_up // High importance
+                            4 -> R.drawable.double_arrow_up_red // Very High importance
+                            else -> R.drawable.outline_circle_24 // Default
                         }
                     ),
                     contentDescription = "Importance"
