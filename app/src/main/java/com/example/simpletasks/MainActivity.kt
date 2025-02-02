@@ -12,6 +12,7 @@ import com.example.simpletasks.view.EditTaskScreen
 import com.example.simpletasks.view.MainScreen
 import com.example.simpletasks.model.TaskDatabase
 import com.example.simpletasks.model.TaskRepository
+import com.example.simpletasks.view.CategoriesScreen
 import com.example.simpletasks.viewmodel.TaskViewModel
 import com.example.simpletasks.viewmodel.TaskViewModelFactory
 
@@ -38,6 +39,9 @@ class MainActivity : ComponentActivity() {
                 composable("edit/{taskId}") { backStackEntry ->
                     val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull() ?: 0
                     EditTaskScreen(navController, tasksViewModel, taskId)
+                }
+                composable("categories") {
+                    CategoriesScreen(navController = navController, taskViewModel = tasksViewModel)
                 }
             }
         }

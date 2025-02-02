@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.play.services.mlkit.subject.segmentation)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.litert.support.api)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,10 +78,15 @@ dependencies {
     implementation (libs.androidx.lifecycle.viewmodel.compose)
     implementation (libs.androidx.lifecycle.viewmodel.ktx)
     implementation (libs.androidx.lifecycle.runtime.compose)
+//    implementation(platform(libs.androidx.compose.material))
+//    implementation ("androidxcompose.material:material:1.5.4")
+
+    implementation("androidx.compose.material:material:1.7.5")
+
+    implementation (libs.androidx.navigation.compose)
 
     implementation (libs.androidx.room.runtime)
     annotationProcessor (libs.androidx.room.compiler)
-//    noinspection KaptUsageInsteadOfKsp
     kapt (libs.androidx.room.compiler)
     implementation (libs.androidx.room.ktx)
 }
