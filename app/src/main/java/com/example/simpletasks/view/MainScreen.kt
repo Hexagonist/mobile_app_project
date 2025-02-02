@@ -46,6 +46,7 @@ import androidx.navigation.NavController
 import com.example.simpletasks.R
 import com.example.simpletasks.model.Task
 import com.example.simpletasks.viewmodel.TaskViewModel
+import kotlinx.coroutines.selects.select
 import org.tensorflow.lite.support.label.Category
 
 
@@ -238,14 +239,16 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                     label = { Text("Home") },
                     selected = true,
-                    onClick = { navController.navigate("main") }
+                    onClick = { navController.navigate("main") },
+                    modifier = Modifier.background(Color.LightGray)
                 )
                 // Categories option
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Info, contentDescription = "Categories") },
                     label = { Text("Categories") },
                     selected = false,
-                    onClick = { navController.navigate("categories") }
+                    onClick = { navController.navigate("categories") },
+                    modifier = Modifier.background(Color.Transparent)
                 )
             }
         }
@@ -268,69 +271,6 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
         }
     }
 }
-
-//@Composable
-//fun TaskRow(task: Task, onEdit: () -> Unit, onToggleDone: (Boolean) -> Unit) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(8.dp)
-//            .clickable { onEdit() },
-//    ) {
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            // Importance Image
-//            Column(Modifier.padding(16.dp)) {
-//                Image(
-//                    painter = painterResource(
-//                        id = when (task.importance) {
-//                            0 -> R.drawable.arrow_up // Low importance
-//                            1 -> R.drawable.double_arrow_up_orange // Medium importance
-//                            2 -> R.drawable.double_arrow_up_red // High importance
-//                            else -> R.drawable.arrow_up // Default
-//                        }
-//                    ),
-//                    contentDescription = "Importance"
-//                )
-//            }
-//
-//            // Task Title
-//            Column(
-//                Modifier
-//                    .weight(1f)
-//                    .padding(16.dp)) {
-//                Text(
-//                    text = task.title,
-//                    fontSize = 20.sp,
-//                    fontWeight = if (task.isDone) FontWeight.Normal else FontWeight.Bold,
-//                    textDecoration = if (task.isDone) TextDecoration.LineThrough else TextDecoration.None
-//                )
-//            }
-//
-//            // Task Category
-//            Column(Modifier.padding(16.dp)) {
-//                Text(
-//                    text = task.categoryName,
-//                    fontSize = 20.sp,
-//                    fontWeight = if (task.isDone) FontWeight.Normal else FontWeight.Bold,
-//                    textDecoration = if (task.isDone) TextDecoration.LineThrough else TextDecoration.None
-//                )
-//            }
-//
-//            // Checkbox for isDone
-//            Checkbox(
-//                checked = task.isDone,
-//                onCheckedChange = { isChecked ->
-//                    onToggleDone(isChecked) // Call the callback to update the task
-//                },
-//                modifier = Modifier.padding(16.dp)
-//            )
-//        }
-//    }
-//}
 
 @Composable
 fun MeanRow(mean: Double) {

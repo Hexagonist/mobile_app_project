@@ -3,6 +3,7 @@ package com.example.simpletasks.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -19,12 +20,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,17 +47,17 @@ import com.example.simpletasks.viewmodel.TaskViewModel
 @Composable
 fun CategoriesScreen(navController: NavController, taskViewModel: TaskViewModel) {
     val tasks by taskViewModel.allTasks.observeAsState(listOf())
-    var showCategoryMenu by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf("All") }
+    var showCategoryDialog by remember { mutableStateOf(false) } // State for showing the dialog
+    var selectedCategories by remember { mutableStateOf<Set<String>>(setOf()) } // State for selected categories
 
     // Get unique categories from tasks
     val categories = tasks.map { it.categoryName }.distinct()
 
-    // Filter tasks by selected category
-    val filteredTasks = if (selectedCategory == "All") {
+    // Filter tasks based on selected categories
+    val filteredTasks = if (selectedCategories.isEmpty()) {
         tasks
     } else {
-        tasks.filter { it.categoryName == selectedCategory }
+        tasks.filter { it.categoryName in selectedCategories }
     }
 
     Scaffold(
@@ -73,36 +76,11 @@ fun CategoriesScreen(navController: NavController, taskViewModel: TaskViewModel)
                 },
                 actions = {
                     // Category filter button
-                    IconButton(onClick = { showCategoryMenu = true }) {
+                    IconButton(onClick = { showCategoryDialog = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_sort), // Replace with your filter icon
                             contentDescription = "Filter by Category"
                         )
-                    }
-
-                    // Category filter menu
-                    DropdownMenu(
-                        expanded = showCategoryMenu,
-                        onDismissRequest = { showCategoryMenu = false }
-                    ) {
-                        // "All" option
-                        DropdownMenuItem(
-                            text = { Text("All") },
-                            onClick = {
-                                selectedCategory = "All"
-                                showCategoryMenu = false
-                            }
-                        )
-                        // Other categories
-                        categories.forEach { category ->
-                            DropdownMenuItem(
-                                text = { Text(category) },
-                                onClick = {
-                                    selectedCategory = category
-                                    showCategoryMenu = false
-                                }
-                            )
-                        }
                     }
                 }
             )
@@ -115,15 +93,17 @@ fun CategoriesScreen(navController: NavController, taskViewModel: TaskViewModel)
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                     label = { Text("Home") },
-                    selected = false,
-                    onClick = { navController.navigate("main") }
+                    selected = true,
+                    onClick = { navController.navigate("main") },
+                    modifier = Modifier.background(Color.Transparent)
                 )
                 // Categories option
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Info, contentDescription = "Categories") },
                     label = { Text("Categories") },
-                    selected = true,
-                    onClick = { navController.navigate("categories") }
+                    selected = false,
+                    onClick = { navController.navigate("categories") },
+                    modifier = Modifier.background(Color.LightGray)
                 )
             }
         }
@@ -143,6 +123,53 @@ fun CategoriesScreen(navController: NavController, taskViewModel: TaskViewModel)
                     )
                 }
             }
+        }
+
+        // Multi-select category dialog
+        if (showCategoryDialog) {
+            AlertDialog(
+                onDismissRequest = { showCategoryDialog = false },
+                title = { Text("Select Categories") },
+                text = {
+                    Column {
+                        categories.forEach { category ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        selectedCategories = if (category in selectedCategories) {
+                                            selectedCategories - category
+                                        } else {
+                                            selectedCategories + category
+                                        }
+                                    }
+                                    .padding(8.dp)
+                            ) {
+                                Checkbox(
+                                    checked = category in selectedCategories,
+                                    onCheckedChange = { isChecked ->
+                                        selectedCategories = if (isChecked) {
+                                            selectedCategories + category
+                                        } else {
+                                            selectedCategories - category
+                                        }
+                                    }
+                                )
+                                Text(
+                                    text = category,
+                                    modifier = Modifier.padding(start = 8.dp)
+                                )
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    Button(onClick = { showCategoryDialog = false }) {
+                        Text("Done")
+                    }
+                }
+            )
         }
     }
 }

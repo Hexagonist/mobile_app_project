@@ -27,16 +27,42 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.simpletasks.R
 import com.example.simpletasks.viewmodel.TaskViewModel
+import android.app.DatePickerDialog
+import android.content.Context
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
+fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, context: Context) {
     var title by remember { mutableStateOf("") }
-    var color by remember { mutableStateOf(0) }
     var category by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var importance by remember { mutableStateOf(0) }
+    var selectedDate by remember { mutableStateOf("") }
+    var daysUntilTask by remember { mutableStateOf(0) }
+
+    fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(context, { _, pickedYear, pickedMonth, pickedDay ->
+            val selectedCalendar = Calendar.getInstance()
+            selectedCalendar.set(pickedYear, pickedMonth, pickedDay)
+
+            val today = Calendar.getInstance()
+            val difference = TimeUnit.DAYS.convert(
+                selectedCalendar.timeInMillis - today.timeInMillis,
+                TimeUnit.MILLISECONDS
+            ).toInt()
+
+            daysUntilTask = difference
+            selectedDate = "$pickedDay/${pickedMonth + 1}/$pickedYear"
+        }, year, month, day).show()
+    }
 
     Scaffold(
         topBar = {
@@ -44,7 +70,7 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center // This centers the content horizontally
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = "Dodaj Nowe Zadanie",
@@ -77,12 +103,17 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
                 onValueChange = { description = it },
                 label = { Text("Treść") }
             )
-            // Importance Buttons
+
+            // Date Picker Button
+            Button(onClick = { showDatePicker() }) {
+                Text(text = if (selectedDate.isEmpty()) "Termin" else "Data: $selectedDate")
+            }
+
+            // Importance Selection
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Button for Importance 0
                 IconButton(
                     onClick = { importance = 0 },
                     modifier = Modifier
@@ -90,11 +121,10 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.arrow_up), // Replace with your drawable resource
+                        painter = painterResource(id = R.drawable.arrow_up),
                         contentDescription = "Low Importance"
                     )
                 }
-                // Button for Importance 1
                 IconButton(
                     onClick = { importance = 1 },
                     modifier = Modifier
@@ -102,12 +132,10 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_orange), // Replace with your drawable resource
+                        painter = painterResource(id = R.drawable.double_arrow_up_orange),
                         contentDescription = "Medium Importance"
                     )
                 }
-
-                // Button for Importance 2
                 IconButton(
                     onClick = { importance = 2 },
                     modifier = Modifier
@@ -115,24 +143,29 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_red), // Replace with your drawable resource
+                        painter = painterResource(id = R.drawable.double_arrow_up_red),
                         contentDescription = "High Importance"
                     )
                 }
             }
-            Button(onClick = {
-                tasksViewModel.insert(
-                    Task(
-                        title = title,
-                        color = color,
-                        categoryName = category,
-                        description = description,
-                        importance = importance,
-                        isDone = false
 
-                    ))
-                navController.popBackStack()
-            }) {
+            // Disable button if title or category is empty
+            Button(
+                onClick = {
+                    tasksViewModel.insert(
+                        Task(
+                            title = title,
+                            color = daysUntilTask, // Save daysUntilTask as color
+                            categoryName = category,
+                            description = description,
+                            importance = importance,
+                            isDone = false
+                        )
+                    )
+                    navController.popBackStack()
+                },
+                enabled = title.isNotBlank() && category.isNotBlank()
+            ) {
                 Text(
                     text = "Zapisz",
                     fontSize = 20.sp
@@ -141,3 +174,4 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel) {
         }
     }
 }
+

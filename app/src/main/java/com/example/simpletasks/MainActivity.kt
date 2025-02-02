@@ -1,5 +1,6 @@
 package com.example.simpletasks
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     MainScreen(navController, tasksViewModel)
                 }
                 composable("add") {
-                    AddTaskScreen(navController, tasksViewModel)
+                    AddTaskScreen(navController, tasksViewModel, this@MainActivity)
                 }
                 composable("edit/{taskId}") { backStackEntry ->
                     val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull() ?: 0
