@@ -106,7 +106,7 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, c
 
             // Date Picker Button
             Button(onClick = { showDatePicker() }) {
-                Text(text = if (selectedDate.isEmpty()) "Termin" else "Data: $selectedDate")
+                Text(text = if (selectedDate.isEmpty()) "Termin" else "Termin: $selectedDate")
             }
 
             // Importance Selection
@@ -121,8 +121,8 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, c
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.arrow_up),
-                        contentDescription = "Low Importance"
+                        painter = painterResource(id = R.drawable.double_arrow_down),
+                        contentDescription = "Very Low Importance"
                     )
                 }
                 IconButton(
@@ -132,8 +132,8 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, c
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_orange),
-                        contentDescription = "Medium Importance"
+                        painter = painterResource(id = R.drawable.arrow_down),
+                        contentDescription = "Low Importance"
                     )
                 }
                 IconButton(
@@ -143,8 +143,30 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, c
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_red),
+                        painter = painterResource(id = R.drawable.outline_circle_24),
+                        contentDescription = "Medium Importance"
+                    )
+                }
+                IconButton(
+                    onClick = { importance = 3 },
+                    modifier = Modifier
+                        .background(if (importance == 3) Color.LightGray else Color.Transparent)
+                        .border(1.dp, Color.Gray)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrow_up),
                         contentDescription = "High Importance"
+                    )
+                }
+                IconButton(
+                    onClick = { importance = 4 },
+                    modifier = Modifier
+                        .background(if (importance == 4) Color.LightGray else Color.Transparent)
+                        .border(1.dp, Color.Gray)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.double_arrow_up_red),
+                        contentDescription = "Very High Importance"
                     )
                 }
             }

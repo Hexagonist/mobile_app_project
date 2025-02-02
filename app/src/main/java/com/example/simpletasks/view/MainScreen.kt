@@ -50,107 +50,6 @@ import kotlinx.coroutines.selects.select
 import org.tensorflow.lite.support.label.Category
 
 
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
-//    val tasks by taskViewModel.allTasks.observeAsState(listOf())
-//    var showSortMenu by remember { mutableStateOf(false) } // State for showing the sort menu
-//    var sortOption by remember { mutableStateOf("None") } // State for the selected sort option
-//
-//    // Sort tasks based on the selected option
-//    val sortedTasks = when (sortOption) {
-//        "Importance" -> tasks.sortedBy { it.importance }
-//        "Category" -> tasks.sortedBy { it.categoryName }
-//        "Completed" -> tasks.sortedBy { it.isDone }
-//        else -> tasks.sortedBy { it.isDone } // Default: no sorting
-//    }
-//
-//    Scaffold(
-//        topBar = {
-//            TopAppBar(
-//                title = {
-//                    Row(
-//                        modifier = Modifier.fillMaxWidth(),
-//                        horizontalArrangement = Arrangement.Center
-//                    ) {
-//                        Text(
-//                            text = "SimpleTasks",
-//                            fontWeight = FontWeight.Bold
-//                        )
-//                    }
-//                },
-//                actions = {
-//                    // Sort icon button to show the context menu
-//                    IconButton(onClick = { showSortMenu = true }) {
-//                        Icon(
-//                            painter = painterResource(id = R.drawable.ic_sort), // Replace with your sort icon
-//                            contentDescription = "Sort Tasks"
-//                        )
-//                    }
-//
-//                    // Sort context menu
-//                    DropdownMenu(
-//                        expanded = showSortMenu,
-//                        onDismissRequest = { showSortMenu = false }
-//                    ) {
-//                        DropdownMenuItem(
-//                            text = { Text("Sort by Importance") },
-//                            onClick = {
-//                                sortOption = "Importance"
-//                                showSortMenu = false
-//                            }
-//                        )
-//                        DropdownMenuItem(
-//                            text = { Text("Sort by Category") },
-//                            onClick = {
-//                                sortOption = "Category"
-//                                showSortMenu = false
-//                            }
-//                        )
-//                        DropdownMenuItem(
-//                            text = { Text("Sort by Completed") },
-//                            onClick = {
-//                                sortOption = "Completed"
-//                                showSortMenu = false
-//                            }
-//                        )
-//                    }
-//                }
-//            )
-//        },
-//        floatingActionButton = {
-//            // Floating Action Button (FAB)
-//            FloatingActionButton(
-//                onClick = { navController.navigate("add") },
-//                modifier = Modifier.padding(16.dp)
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Add,
-//                    contentDescription = "Add Task"
-//                )
-//            }
-//        }
-//    ) { padding ->
-//        Column(modifier = Modifier.padding(padding)) {
-//            // LazyColumn to display sorted tasks
-//            LazyColumn(modifier = Modifier.weight(1f)) {
-//                items(sortedTasks) { task ->
-//                    TaskRow(
-//                        task = task,
-//                        onEdit = {
-//                            navController.navigate("edit/${task.id}")
-//                        },
-//                        onToggleDone = { isDone ->
-//                            taskViewModel.update(task.copy(isDone = isDone))
-//                        }
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
@@ -160,10 +59,11 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
 
     // Sort tasks based on the selected option
     val sortedTasks = when (sortOption) {
-        "Importance" -> tasks.sortedBy { it.importance }
+        "Importance" -> tasks.sortedByDescending { it.importance }
         "Category" -> tasks.sortedBy { it.categoryName }
         "Completed" -> tasks.sortedBy { it.isDone }
-        else -> tasks
+        "Days Left" -> tasks.sortedBy { it.color }
+        else -> tasks.sortedByDescending { it.importance }
     }
 
     Scaffold(
@@ -181,7 +81,7 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                     }
                 },
                 actions = {
-                    // Sort icon button to show the context menu
+                    // Sort Menu Button
                     IconButton(onClick = { showSortMenu = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_sort),
@@ -189,7 +89,14 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                         )
                     }
 
-                    // Sort context menu
+                    // Delete Done Button
+                    IconButton(onClick = { taskViewModel.deleteDoneTasks() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_delete), // Add delete icon
+                            contentDescription = "Delete Done Tasks"
+                        )
+                    }
+
                     DropdownMenu(
                         expanded = showSortMenu,
                         onDismissRequest = { showSortMenu = false }
@@ -215,6 +122,13 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                                 showSortMenu = false
                             }
                         )
+                        DropdownMenuItem(
+                            text = { Text("Sort by Days Left") },
+                            onClick = {
+                                sortOption = "Days Left"
+                                showSortMenu = false
+                            }
+                        )
                     }
                 }
             )
@@ -232,9 +146,8 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
         },
         bottomBar = {
             BottomNavigation(
-                backgroundColor = MaterialTheme.colorScheme.background // Default background color
+                backgroundColor = MaterialTheme.colorScheme.background
             ) {
-                // Home option
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                     label = { Text("Home") },
@@ -242,7 +155,6 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                     onClick = { navController.navigate("main") },
                     modifier = Modifier.background(Color.LightGray)
                 )
-                // Categories option
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Info, contentDescription = "Categories") },
                     label = { Text("Categories") },
@@ -254,7 +166,6 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-            // LazyColumn to display sorted tasks
             LazyColumn(modifier = Modifier.weight(1f)) {
                 items(sortedTasks) { task ->
                     TaskRow(
@@ -271,32 +182,3 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
         }
     }
 }
-
-@Composable
-fun MeanRow(mean: Double) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-//        horizontalArrangement = Arrangement.SpaceBetween,
-//        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Column(Modifier.padding(16.dp)) {
-                Text(
-                    text = "Średnia Ocen ",
-                    style = MaterialTheme.typography.titleLarge
-
-                )
-            }
-            Column(Modifier.padding(16.dp)) {
-                Text(
-                    text = if (mean.isNaN()) "N/A" else "%.2f".format(mean),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-        }
-    }
-}
-
-

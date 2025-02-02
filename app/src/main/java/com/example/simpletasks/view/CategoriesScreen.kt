@@ -51,7 +51,7 @@ fun CategoriesScreen(navController: NavController, taskViewModel: TaskViewModel)
     var selectedCategories by remember { mutableStateOf<Set<String>>(setOf()) } // State for selected categories
 
     // Get unique categories from tasks
-    val categories = tasks.map { it.categoryName }.distinct()
+    val categories = tasks.map { it.categoryName }.distinct().sorted()
 
     // Filter tasks based on selected categories
     val filteredTasks = if (selectedCategories.isEmpty()) {

@@ -1,5 +1,6 @@
 package com.example.simpletasks.view
 
+import android.app.DatePickerDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,19 +31,44 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.simpletasks.R
 import com.example.simpletasks.viewmodel.TaskViewModel
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
+import android.content.Context
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, taskId: Int) {
+fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, taskId: Int, context: Context) {
     var task = tasksViewModel.allTasks.observeAsState(listOf()).value.firstOrNull { it.id.toInt() == taskId }
 
     var title by remember { mutableStateOf(task?.title ?: "") }
-    var color by remember { mutableStateOf(0) }
+    var color by remember { mutableStateOf(task?.color ?: 0) }
     var category by remember { mutableStateOf(task?.categoryName ?: "") }
     var description by remember { mutableStateOf(task?.description ?: "") }
-    var importance by remember { mutableStateOf(0) }
-//    var isDone by remember { mutableStateOf(task.isDone) }
+    var importance by remember { mutableStateOf(task?.importance ?: 0) }
+    var selectedDate by remember { mutableStateOf("") }
+    var daysUntilTask by remember { mutableStateOf(0) }
 
+    fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        DatePickerDialog(context, { _, pickedYear, pickedMonth, pickedDay ->
+            val selectedCalendar = Calendar.getInstance()
+            selectedCalendar.set(pickedYear, pickedMonth, pickedDay)
+
+            val today = Calendar.getInstance()
+            val difference = TimeUnit.DAYS.convert(
+                selectedCalendar.timeInMillis - today.timeInMillis,
+                TimeUnit.MILLISECONDS
+            ).toInt()
+
+            daysUntilTask = difference
+            selectedDate = "$pickedDay/${pickedMonth + 1}/$pickedYear"
+        }, year, month, day).show()
+    }
 
     Scaffold(
         topBar = {
@@ -50,7 +76,7 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center // This centers the content horizontally
+                        horizontalArrangement = Arrangement.Center // This centers the content horizontally
                     ) {
                         Text(
                             text = "Edytuj",
@@ -83,12 +109,15 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                 onValueChange = { description = it },
                 label = { Text("Treść") }
             )
+            // Date Picker Button
+            Button(onClick = { showDatePicker() }) {
+                Text(text = if (selectedDate.isEmpty()) "Termin" else "Termin: $selectedDate")
+            }
             // Importance Buttons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Button for Importance 0
                 IconButton(
                     onClick = { importance = 0 },
                     modifier = Modifier
@@ -96,11 +125,10 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.arrow_up), // Replace with your drawable resource
-                        contentDescription = "Low Importance"
+                        painter = painterResource(id = R.drawable.double_arrow_down),
+                        contentDescription = "Very Low Importance"
                     )
                 }
-                // Button for Importance 1
                 IconButton(
                     onClick = { importance = 1 },
                     modifier = Modifier
@@ -108,12 +136,10 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_orange), // Replace with your drawable resource
-                        contentDescription = "Medium Importance"
+                        painter = painterResource(id = R.drawable.arrow_down),
+                        contentDescription = "Low Importance"
                     )
                 }
-
-                // Button for Importance 2
                 IconButton(
                     onClick = { importance = 2 },
                     modifier = Modifier
@@ -121,8 +147,30 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.double_arrow_up_red), // Replace with your drawable resource
+                        painter = painterResource(id = R.drawable.outline_circle_24),
+                        contentDescription = "Medium Importance"
+                    )
+                }
+                IconButton(
+                    onClick = { importance = 3 },
+                    modifier = Modifier
+                        .background(if (importance == 3) Color.LightGray else Color.Transparent)
+                        .border(1.dp, Color.Gray)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.arrow_up),
                         contentDescription = "High Importance"
+                    )
+                }
+                IconButton(
+                    onClick = { importance = 4 },
+                    modifier = Modifier
+                        .background(if (importance == 4) Color.LightGray else Color.Transparent)
+                        .border(1.dp, Color.Gray)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.double_arrow_up_red),
+                        contentDescription = "Very High Importance"
                     )
                 }
             }
@@ -139,7 +187,9 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                         ))
                     }
                     navController.popBackStack()
-                }) {
+                },
+                    enabled = title.isNotBlank() && category.isNotBlank()
+                ) {
                     Text(
                         text = "Zapisz",
                         fontSize = 20.sp
