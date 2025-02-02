@@ -10,8 +10,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
@@ -227,7 +230,9 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
             }
         },
         bottomBar = {
-            BottomNavigation {
+            BottomNavigation(
+                backgroundColor = MaterialTheme.colorScheme.background // Default background color
+            ) {
                 // Home option
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
@@ -237,7 +242,7 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                 )
                 // Categories option
                 BottomNavigationItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Categories") },
+                    icon = { Icon(Icons.Default.Info, contentDescription = "Categories") },
                     label = { Text("Categories") },
                     selected = false,
                     onClick = { navController.navigate("categories") }

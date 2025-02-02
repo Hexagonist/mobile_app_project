@@ -23,12 +23,14 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -106,7 +108,9 @@ fun CategoriesScreen(navController: NavController, taskViewModel: TaskViewModel)
             )
         },
         bottomBar = {
-            BottomNavigation {
+            BottomNavigation(
+                backgroundColor = MaterialTheme.colorScheme.background // Default background color
+            ) {
                 // Home option
                 BottomNavigationItem(
                     icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
@@ -116,7 +120,7 @@ fun CategoriesScreen(navController: NavController, taskViewModel: TaskViewModel)
                 )
                 // Categories option
                 BottomNavigationItem(
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Categories") },
+                    icon = { Icon(Icons.Default.Info, contentDescription = "Categories") },
                     label = { Text("Categories") },
                     selected = true,
                     onClick = { navController.navigate("categories") }
