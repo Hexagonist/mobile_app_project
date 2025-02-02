@@ -9,24 +9,6 @@ import com.example.simpletasks.model.TaskRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-//class TaskViewModel(private val taskDao: TaskDao) : ViewModel() {
-//
-//    val allTasks: LiveData<List<Task>> = taskDao.getAllTasks().asLiveData()
-//
-//    fun insert(task: Task) = viewModelScope.launch {
-//        taskDao.insert(task)
-//    }
-//
-//    fun update(task: Task) = viewModelScope.launch {
-//        taskDao.update(task)
-//    }
-//
-//    fun delete(task: Task) = viewModelScope.launch {
-//        taskDao.deleteTaskById(task.id)
-//    }
-//}
-
-
 class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
 //    val allTasks: Flow<List<Task>> = repository.allTasks
