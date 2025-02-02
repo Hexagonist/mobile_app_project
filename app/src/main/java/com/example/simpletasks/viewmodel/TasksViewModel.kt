@@ -44,6 +44,12 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         repository.delete(task)
     }
 
+    fun deleteDoneTasks() {
+        viewModelScope.launch {
+            repository.deleteDoneTasks()
+        }
+    }
+
     fun deleteAllTasks() = viewModelScope.launch {
         repository.deleteAllTasks()
     }

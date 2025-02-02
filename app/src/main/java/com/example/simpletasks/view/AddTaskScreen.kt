@@ -150,7 +150,7 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, c
                 IconButton(
                     onClick = { importance = 3 },
                     modifier = Modifier
-                        .background(if (importance == 2) Color.LightGray else Color.Transparent)
+                        .background(if (importance == 3) Color.LightGray else Color.Transparent)
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
@@ -161,7 +161,7 @@ fun AddTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, c
                 IconButton(
                     onClick = { importance = 4 },
                     modifier = Modifier
-                        .background(if (importance == 2) Color.LightGray else Color.Transparent)
+                        .background(if (importance == 4) Color.LightGray else Color.Transparent)
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(

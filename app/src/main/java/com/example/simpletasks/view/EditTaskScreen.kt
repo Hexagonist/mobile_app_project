@@ -42,13 +42,12 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
     var task = tasksViewModel.allTasks.observeAsState(listOf()).value.firstOrNull { it.id.toInt() == taskId }
 
     var title by remember { mutableStateOf(task?.title ?: "") }
-    var color by remember { mutableStateOf(0) }
+    var color by remember { mutableStateOf(task?.color ?: 0) }
     var category by remember { mutableStateOf(task?.categoryName ?: "") }
     var description by remember { mutableStateOf(task?.description ?: "") }
-    var importance by remember { mutableStateOf(0) }
+    var importance by remember { mutableStateOf(task?.importance ?: 0) }
     var selectedDate by remember { mutableStateOf("") }
     var daysUntilTask by remember { mutableStateOf(0) }
-//    var isDone by remember { mutableStateOf(task.isDone) }
 
     fun showDatePicker() {
         val calendar = Calendar.getInstance()
@@ -77,7 +76,7 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                 title = {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center // This centers the content horizontally
+                        horizontalArrangement = Arrangement.Center // This centers the content horizontally
                     ) {
                         Text(
                             text = "Edytuj",
@@ -155,7 +154,7 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                 IconButton(
                     onClick = { importance = 3 },
                     modifier = Modifier
-                        .background(if (importance == 2) Color.LightGray else Color.Transparent)
+                        .background(if (importance == 3) Color.LightGray else Color.Transparent)
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(
@@ -166,7 +165,7 @@ fun EditTaskScreen(navController: NavController, tasksViewModel: TaskViewModel, 
                 IconButton(
                     onClick = { importance = 4 },
                     modifier = Modifier
-                        .background(if (importance == 2) Color.LightGray else Color.Transparent)
+                        .background(if (importance == 4) Color.LightGray else Color.Transparent)
                         .border(1.dp, Color.Gray)
                 ) {
                     Image(

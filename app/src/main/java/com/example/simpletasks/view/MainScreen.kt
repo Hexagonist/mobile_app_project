@@ -62,7 +62,7 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
         "Importance" -> tasks.sortedByDescending { it.importance }
         "Category" -> tasks.sortedBy { it.categoryName }
         "Completed" -> tasks.sortedBy { it.isDone }
-        "Days Left" -> tasks.sortedBy { it.color } // Sorting by days left (stored in color field)
+        "Days Left" -> tasks.sortedBy { it.color }
         else -> tasks.sortedByDescending { it.importance }
     }
 
@@ -81,10 +81,19 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
                     }
                 },
                 actions = {
+                    // Sort Menu Button
                     IconButton(onClick = { showSortMenu = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_sort),
                             contentDescription = "Sort Tasks"
+                        )
+                    }
+
+                    // Delete Done Button
+                    IconButton(onClick = { taskViewModel.deleteDoneTasks() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_delete), // Add delete icon
+                            contentDescription = "Delete Done Tasks"
                         )
                     }
 
@@ -173,33 +182,3 @@ fun MainScreen(navController: NavController, taskViewModel: TaskViewModel) {
         }
     }
 }
-
-//
-//@Composable
-//fun MeanRow(mean: Double) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(8.dp),
-////        horizontalArrangement = Arrangement.SpaceBetween,
-////        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-//            Column(Modifier.padding(16.dp)) {
-//                Text(
-//                    text = "Średnia Ocen ",
-//                    style = MaterialTheme.typography.titleLarge
-//
-//                )
-//            }
-//            Column(Modifier.padding(16.dp)) {
-//                Text(
-//                    text = if (mean.isNaN()) "N/A" else "%.2f".format(mean),
-//                    style = MaterialTheme.typography.titleLarge
-//                )
-//            }
-//        }
-//    }
-//}
-
-
